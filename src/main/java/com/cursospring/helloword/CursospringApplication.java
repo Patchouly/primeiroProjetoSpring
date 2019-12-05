@@ -8,8 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.cursospring.helloword.domain.Categoria;
+import com.cursospring.helloword.domain.Cidade;
+import com.cursospring.helloword.domain.Estado;
 import com.cursospring.helloword.domain.Produto;
 import com.cursospring.helloword.repositories.CategoriaReposiroty;
+import com.cursospring.helloword.repositories.CidadeReposiroty;
+import com.cursospring.helloword.repositories.EstadoReposiroty;
 import com.cursospring.helloword.repositories.ProdutoReposiroty;
 
 @SpringBootApplication
@@ -19,6 +23,10 @@ public class CursospringApplication implements CommandLineRunner{
 	private CategoriaReposiroty categoriaReposiroty;
 	@Autowired
 	private ProdutoReposiroty produtoReposiroty;
+	@Autowired
+	private EstadoReposiroty estadoReposiroty;
+	@Autowired
+	private CidadeReposiroty cidadeReposiroty;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -43,6 +51,19 @@ public class CursospringApplication implements CommandLineRunner{
 		
 		categoriaReposiroty.saveAll(Arrays.asList(cat1, cat2));
 		produtoReposiroty.saveAll(Arrays.asList(prod1, prod2, prod3));
+		
+		Estado est1 = new Estado(null, "Sergipe");
+		Estado est2 = new Estado(null, "Pernambuco");
+		
+		Cidade cid1 = new Cidade(null, "Aracaju", est1);
+		Cidade cid2 = new Cidade(null, "Recife", est2);
+		Cidade cid3 = new Cidade(null, "Ipojuca", est2);
+		
+		est1.getCidades().addAll(Arrays.asList(cid1));
+		est2.getCidades().addAll(Arrays.asList(cid2, cid3));
+		
+		estadoReposiroty.saveAll(Arrays.asList(est1, est2));
+		cidadeReposiroty.saveAll(Arrays.asList(cid1, cid2, cid3));
 		
 	}
 	
