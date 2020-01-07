@@ -14,10 +14,10 @@ import com.cursospring.helloword.services.exceptions.ObjectNotFoundException;
 public class CategoriaService {
 
 	@Autowired
-	private CategoriaReposiroty categoriaReposiroty;
+	private CategoriaReposiroty repo;
 	
 	public Categoria buscaCategoria(Integer id) throws ObjectNotFoundException {
-		Optional<Categoria> obj = categoriaReposiroty.findById(id);
+		Optional<Categoria> obj = repo.findById(id);
 		return obj.orElseThrow ( 
 				() -> new ObjectNotFoundException("Objeto não encontrado! id: " + id + ", Tipo: " + Categoria.class.getName()) 
 			);

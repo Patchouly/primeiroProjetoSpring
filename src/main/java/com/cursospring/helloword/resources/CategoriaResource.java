@@ -15,11 +15,11 @@ import com.cursospring.helloword.services.CategoriaService;
 public class CategoriaResource {
 	
 	@Autowired
-	private CategoriaService categoriaService;
+	private CategoriaService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
-		Categoria obj = categoriaService.buscaCategoria(id);
+		Categoria obj = service.buscaCategoria(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }
