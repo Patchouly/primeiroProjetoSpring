@@ -13,6 +13,7 @@ import com.cursospring.helloword.domain.Cidade;
 import com.cursospring.helloword.domain.Cliente;
 import com.cursospring.helloword.domain.Endereco;
 import com.cursospring.helloword.domain.Estado;
+import com.cursospring.helloword.domain.ItemPedido;
 import com.cursospring.helloword.domain.Pagamento;
 import com.cursospring.helloword.domain.PagamentoBoleto;
 import com.cursospring.helloword.domain.PagamentoCartao;
@@ -25,6 +26,7 @@ import com.cursospring.helloword.repositories.CidadeReposiroty;
 import com.cursospring.helloword.repositories.ClienteReposiroty;
 import com.cursospring.helloword.repositories.EnderecoReposiroty;
 import com.cursospring.helloword.repositories.EstadoReposiroty;
+import com.cursospring.helloword.repositories.ItemPedidoReposiroty;
 import com.cursospring.helloword.repositories.PagamentoReposiroty;
 import com.cursospring.helloword.repositories.PedidoReposiroty;
 import com.cursospring.helloword.repositories.ProdutoReposiroty;
@@ -48,6 +50,8 @@ public class CursospringApplication implements CommandLineRunner{
 	private PedidoReposiroty pedidoReposiroty;
 	@Autowired
 	private PagamentoReposiroty pagamentoReposiroty;
+	@Autowired
+	private ItemPedidoReposiroty itemPedidoReposiroty;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -112,6 +116,31 @@ public class CursospringApplication implements CommandLineRunner{
 		
 		pedidoReposiroty.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoReposiroty.saveAll(Arrays.asList(pag1, pag2));
+		
+		ItemPedido ip1 = new ItemPedido(ped1, prod1, 0.00, 1, null);
+		ip1.setPreco(ip1.getProduto().getPreco() * ip1.getQtd());
+		if (ip1.getPedido().getPagamento() instanceof PagamentoBoleto) {
+			ip1.setDesconto(ip1.getPreco() * 0.1);
+		}
+		ItemPedido ip2 = new ItemPedido(ped1, prod3, 0.00, 2, null);
+		ip2.setPreco(ip2.getProduto().getPreco() * ip2.getQtd());
+		if (ip2.getPedido().getPagamento() instanceof PagamentoBoleto) {
+			ip2.setDesconto(ip2.getPreco() * 0.1);
+		}
+		ItemPedido ip3 = new ItemPedido(ped2, prod2, 0.00, 1, null);
+		ip3.setPreco(ip3.getProduto().getPreco() * ip3.getQtd());
+		if (ip3.getPedido().getPagamento() instanceof PagamentoBoleto) {
+			ip3.setDesconto(ip3.getPreco() * 0.1);
+		}
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		prod1.getItens().add(ip1);
+		prod2.getItens().add(ip3);
+		prod3.getItens().add(ip2);
+		
+		itemPedidoReposiroty.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 	
 	
