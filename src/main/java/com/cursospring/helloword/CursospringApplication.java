@@ -1,5 +1,6 @@
 package com.cursospring.helloword;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +13,21 @@ import com.cursospring.helloword.domain.Cidade;
 import com.cursospring.helloword.domain.Cliente;
 import com.cursospring.helloword.domain.Endereco;
 import com.cursospring.helloword.domain.Estado;
+import com.cursospring.helloword.domain.Pagamento;
+import com.cursospring.helloword.domain.PagamentoBoleto;
+import com.cursospring.helloword.domain.PagamentoCartao;
+import com.cursospring.helloword.domain.Pedido;
 import com.cursospring.helloword.domain.Produto;
+import com.cursospring.helloword.domain.enums.EstadoPagamento;
 import com.cursospring.helloword.domain.enums.TipoCliente;
 import com.cursospring.helloword.repositories.CategoriaReposiroty;
 import com.cursospring.helloword.repositories.CidadeReposiroty;
 import com.cursospring.helloword.repositories.ClienteReposiroty;
 import com.cursospring.helloword.repositories.EnderecoReposiroty;
 import com.cursospring.helloword.repositories.EstadoReposiroty;
+import com.cursospring.helloword.repositories.PagamentoReposiroty;
+import com.cursospring.helloword.repositories.PedidoReposiroty;
 import com.cursospring.helloword.repositories.ProdutoReposiroty;
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 @SpringBootApplication
 public class CursospringApplication implements CommandLineRunner{
@@ -37,6 +44,10 @@ public class CursospringApplication implements CommandLineRunner{
 	private EnderecoReposiroty enderecoReposiroty;
 	@Autowired
 	private ClienteReposiroty clienteReposiroty;
+	@Autowired
+	private PedidoReposiroty pedidoReposiroty;
+	@Autowired
+	private PagamentoReposiroty pagamentoReposiroty;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -85,6 +96,22 @@ public class CursospringApplication implements CommandLineRunner{
 		
 		clienteReposiroty.saveAll(Arrays.asList(cli1));
 		enderecoReposiroty.saveAll(Arrays.asList(end1, end2));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Pedido ped1 = new Pedido(null, sdf.parse("07/01/2020 11:05"), cli1, end1 );
+		Pedido ped2 = new Pedido(null, sdf.parse("06/01/2020 18:13"), cli1, end2 );
+		
+		Pagamento pag1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pag1);
+		
+		Pagamento pag2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/01/2020 00:00"), null);
+		ped2.setPagamento(pag2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoReposiroty.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoReposiroty.saveAll(Arrays.asList(pag1, pag2));
 	}
 	
 	
