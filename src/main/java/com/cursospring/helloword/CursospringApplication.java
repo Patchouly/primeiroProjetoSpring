@@ -9,12 +9,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.cursospring.helloword.domain.Categoria;
 import com.cursospring.helloword.domain.Cidade;
+import com.cursospring.helloword.domain.Cliente;
+import com.cursospring.helloword.domain.Endereco;
 import com.cursospring.helloword.domain.Estado;
 import com.cursospring.helloword.domain.Produto;
+import com.cursospring.helloword.domain.enums.TipoCliente;
 import com.cursospring.helloword.repositories.CategoriaReposiroty;
 import com.cursospring.helloword.repositories.CidadeReposiroty;
+import com.cursospring.helloword.repositories.ClienteReposiroty;
+import com.cursospring.helloword.repositories.EnderecoReposiroty;
 import com.cursospring.helloword.repositories.EstadoReposiroty;
 import com.cursospring.helloword.repositories.ProdutoReposiroty;
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 @SpringBootApplication
 public class CursospringApplication implements CommandLineRunner{
@@ -27,6 +33,10 @@ public class CursospringApplication implements CommandLineRunner{
 	private EstadoReposiroty estadoReposiroty;
 	@Autowired
 	private CidadeReposiroty cidadeReposiroty;
+	@Autowired
+	private EnderecoReposiroty enderecoReposiroty;
+	@Autowired
+	private ClienteReposiroty clienteReposiroty;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -65,6 +75,16 @@ public class CursospringApplication implements CommandLineRunner{
 		estadoReposiroty.saveAll(Arrays.asList(est1, est2));
 		cidadeReposiroty.saveAll(Arrays.asList(cid1, cid2, cid3));
 		
+		Cliente cli1 = new Cliente(null, "Pedro Cardoso", "pedro@mail.com", "01663010510", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("991020636", "32171931"));
+		
+		Endereco end1 = new Endereco(null, "Rua M", "51", "Apto 303", "Luzia", "49030300", cli1, cid1);
+		Endereco end2 = new Endereco(null, "Av Quirino", "85b", "Apto 207", "Inacio Barbosa", "49045700", cli1, cid1);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
+		
+		clienteReposiroty.saveAll(Arrays.asList(cli1));
+		enderecoReposiroty.saveAll(Arrays.asList(end1, end2));
 	}
 	
 	
