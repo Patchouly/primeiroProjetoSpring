@@ -11,7 +11,7 @@ import com.cursospring.helloword.domain.Pedido;
 import com.cursospring.helloword.services.PedidoService;
 
 @RestController
-@RequestMapping(value="/pedido")
+@RequestMapping(value="/pedidos")
 public class PedidoResource {
 	
 	@Autowired
@@ -19,7 +19,7 @@ public class PedidoResource {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Pedido> find(@PathVariable Integer id) {
-		Pedido obj = service.buscaPedido(id);
+		Pedido obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }
